@@ -337,28 +337,7 @@ bot.on('message', async msg => {
     /* 
         // Данная команда вводится администратором после перезапуска приложения, тем самым, открывая поток сообщений для добавления тем по ключевому слову.
         if (text === '/add' || text === 'предложить') {
-          const roles = await RolesModel.findOne({ chatId });
-          const adminChatId = roles.chatId;
-    
-          bot.sendMessage(adminChatId, 'Добавление тем активировано');
-          bot.on('message', async proposedTheme => {
-            const theme = proposedTheme.text;
-            if (typeof theme === 'string') { // Если сообщение пользователя состоит из строки, то выполнить
-              // При внесении пользователем темы:
-              if (theme.includes('Тема')) { // Метод includes() проверяет, содержит ли строка заданную подстроку, и возвращает, соответственно true или false. Является регистрозависимым.
-                await UsersModel.create({ chatId, userName, fullName, commandLog }); // Каждое действие пользователя логируется в базу данных.
-    
-                const userProposal = await UsersModel.findOne({ chatId });
-                const proposedTheme = ProposalModel.build({ proposedTheme: `${theme}`, chatId: `${chatId}`, userName: `${userName}`, fullName: `${fullName}` });
-                bot.sendMessage(chatId, `Новая тема предложена пользователем:\n    ${fullName} (@${userName})\n \nСмотреть последние 10 предложенных тем:\n    /proposedThemesLast_10`); // Оповещение пользователя о добавлении темы (появлении в списке предложенных)
-                return proposedTheme.save();
-              }
-            }
-            else {
-              bot.sendMessage(chatId, 'В чат можно отправлять только текстовые сообщения!');
-            }
-          })
-        }
+
      */
 
 
