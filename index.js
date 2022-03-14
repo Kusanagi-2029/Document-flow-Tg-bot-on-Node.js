@@ -43,10 +43,10 @@ bot.on('message', async msg => {
   /* Создание команд при обращении к приложению. Представляет из себя функцию, принимающую
 массив объектов, которые содержат поля команды и её описания.*/
   const COMMANDS = [
-    {
+/*     {
       command: 'start',
       description: 'Начало использования. Старт.'
-    },
+    }, */
     {
       command: 'help',
       description: 'Помощь по командам',
@@ -76,20 +76,6 @@ bot.on('message', async msg => {
     helpText += COMMANDS.map(
       (command) => `*\n/${command.command}* — ${command.description}`
     ).join(`\n`);
-    /* 
-        if (text === '/start' || text === 'старт') {
-          try {
-            await UsersModel.create({ chatId, userName, fullName, commandLog }); // При первом подключении к приложению информация о пользователе сразу сохранится в базу данных.
-            await bot.sendMessage(chatId, `Добро пожаловать, *${fullName}*`, { parse_mode: "Markdown" });
-            return bot.sendMessage(chatId, helpText, {
-              parse_mode: "Markdown", // нужно указать для включения поддержки синтаксиса .md - для редактирования текста.
-            });
-          }
-          catch (e) {
-            return bot.sendMessage(chatId, 'Вы уже были зарегистрированы в системе, либо у Вас проблемы с интернет-соединением, и поэтому связь с Базой данных отсутствует.');
-          }
-        }
-         */
 
     if (text === '/start' || text === 'Старт' || text === 'старт' || text === 'привет' || text === 'Дока' || text === 'дока') {
       try {
@@ -111,52 +97,25 @@ bot.on('message', async msg => {
       await UsersModel.create({ chatId, userName, fullName, commandLog }); // Каждое действие пользователя логируется в базу данных.
       await bot.sendMessage(chatId, `*${fullName},*`, { parse_mode: "Markdown" });
 
-      return bot.sendMessage(chatId, `${helpText}\n \nДля добавления темы используйте ключевое слово *Тема*.`, {
+      return bot.sendMessage(chatId, `${helpText}\n \n*/admin* - Узнать кто администратор\n \nДля добавления темы используйте ключевую фразу *Тема:*`, {
         parse_mode: "Markdown", // нужно указать для включения поддержки синтаксиса .md - для редактирования текста.
       });
     }
 
     if (text === '/info' || text === 'Информация о темах') {
-      //    await bot.sendMessage(chatId, 'Внесите файл');
       await UsersModel.create({ chatId, userName, fullName, commandLog }); // Каждое действие пользователя логируется в базу данных.
-      bot.sendMessage(chatId, `\n*/topicsList* — Темы на просмотр из подсистемы "N"\n    */topicsLast_25* — Последние 25 тем из подсистемы "N".\n  \n*/proposedThemesList* — Предложенные темы.\n    */proposedThemesLast_10* — Последние 10 предложенных тем.\n`, { parse_mode: "Markdown" });
-      //  await UsersModel.create({  }); // При первом подключении к приложению информация о пользователе сразу сохранится в базу данных.
+      bot.sendMessage(chatId, `\n*/topicsList* — Темы на просмотр из подсистемы "N"\n    */topicsLast_25* — Последние 25 тем из подсистемы "N".\n \nЧтобы получить подробности о теме, введите её номер (id)\n \n*/proposedThemeLast* — Последняя предложенная тема.\n    */proposedThemesLast_10* — Последние 10 предложенных тем.\n`, { parse_mode: "Markdown" });
     }
 
-    if (text === '/proposedThemesList' || text === 'Все предложенные темы') {
+
+
+    if (text === '/proposedThemeLast' || text === 'Последняя предложенная тема') {
       await UsersModel.create({ chatId, userName, fullName, commandLog }); // Каждое действие пользователя логируется в базу данных.
 
-      bot.sendMessage(chatId, `*Были предложены следующие темы:*`, { parse_mode: "Markdown" });
-/*      
-      for (let i = 1; i <= 9999999; i++) {
-        const theme = await ProposalModel.findByPk(`${i}`)
-        bot.sendMessage(chatId, `*${theme.id}) ${theme.fullName} (@${theme.userName}) предложил(а):\n* \n${theme.proposedTheme}`, { parse_mode: "Markdown" });
-      }
- */
-      const proposedThemes = await ProposalModel.findAll({
-        attributes: ['id', 'proposedTheme', 'fullName', 'userName', 'createdAt']
-      });
-
-      const str = JSON.stringify(proposedThemes, null, 2); // Значение из БД, преобразованное в строку, необработанное. (с Табулятивным отступом, кратным значению-параметру в конце)
-      const strModificationIteration1 = str.replace(/[{,"\[\]}]/gi, ''); // Первая итерация изменения строкового значения полученных данных.
-      const strModificationIteration2 = strModificationIteration1.replace(new RegExp("id", "g"), 'Id темы');
-      const strModificationIteration3 = strModificationIteration2.replace(new RegExp("proposedTheme", "g"), 'Название');
-      const strModificationIteration4 = strModificationIteration3.replace(new RegExp("fullName", "g"), 'Добавлено пользователем');
-      const strModificationIteration5 = strModificationIteration4.replace(new RegExp("userName: ", "g"), 'Контакт которого: @');
-      const strModificationIteration6 = strModificationIteration5.replace(new RegExp("createdAt", "g"), 'Дата добавления');
-
-      bot.sendMessage(chatId, strModificationIteration6);
-
-    }
-
-    // /proposedThemesLast_10
-    if (text === '/proposedThemesLast_10' || text === '10 последних предложенных тем') {
-      await UsersModel.create({ chatId, userName, fullName, commandLog }); // Каждое действие пользователя логируется в базу данных.
-
-      bot.sendMessage(chatId, `*Были предложены следующие темы:*`, { parse_mode: "Markdown" });
+      bot.sendMessage(chatId, `*Последняя предложенная тема:*`, { parse_mode: "Markdown" });
 
       const proposedThemes = await ProposalModel.findAll({
-        limit: 10, // Если значение установленного лимита будет больше кол-ва записей, то просто выведутся все имеющиеся записи. (Т.е. это эквивалентно выведению всех записей)
+        limit: 1, // Если значение установленного лимита будет больше кол-ва записей, то просто выведутся все имеющиеся записи. (Т.е. это эквивалентно выведению всех записей)
         order: [
           ['createdAt', 'DESC'], // последние записи
         ],
@@ -175,53 +134,57 @@ bot.on('message', async msg => {
 
     }
 
-
-
-
-
-
-
-
-
-
-
-
-    if (text === '/AlloUsersToProposeThemes_byAdmin') {
-      const roles = await RolesModel.findOne({ chatId });
-      const adminChatId = roles.chatId;
+    // Вывод 10 последних предложенных тем
+    if (text === '/proposedThemesLast_10' || text === '10 последних предложенных тем') {
       await UsersModel.create({ chatId, userName, fullName, commandLog }); // Каждое действие пользователя логируется в базу данных.
 
-      bot.sendMessage(adminChatId, 'Добавление тем активировано.');
-      bot.on('message', async proposedTheme => {
-        const theme = proposedTheme.text;
-        const chatId = proposedTheme.chat.id;
-        const userName = `${proposedTheme.from.username}`;
-        const fullName = `${proposedTheme.from.first_name} ${proposedTheme.from.last_name}`;
-        if (typeof theme === 'string') { // Если сообщение пользователя состоит из строки, то выполнить
-          // При внесении пользователем темы:
-          if (theme.includes('тема')) {
-            // Метод includes() проверяет, содержит ли строка заданную подстроку, и возвращает, соответственно true или false. Является регистрозависимым.
-            const commandLog = theme;
-            await UsersModel.create({ chatId, userName, fullName, commandLog }); // Каждое действие пользователя логируется в базу данных.
+      bot.sendMessage(chatId, `*10 последних предложенных тем:*`, { parse_mode: "Markdown" });
 
-            const lastThemeCommand = theme.includes('тема');
-            ProposalModel.create({ proposedTheme: `${theme}`, chatId: `${chatId}`, userName: `${userName}`, fullName: `${fullName}` });
-            const lastTheme = await UsersModel.findOne({ // Найти последнего пользователя, ввёдшего команду, которая не равна перечисленным: '/add', '/help', '/start', '/info'
-              where: {
-                commandLog,
-                [Op.not]: [
-                  { commandLog: ['/add', '/help', '/start', '/info'] },
-                ]
-              },
-              order: [['createdAt', 'DESC']]
-            })
-            return bot.sendMessage(chatId, `Тема отправлена на предложение.\n \nСмотреть последние 10 предложенных тем: /proposedThemesLast_10`); // Оповещение пользователя о добавлении темы (появлении в списке предложенных)
-          }
-        }
-        else {
-          bot.sendMessage(chatId, 'В чат можно отправлять только текстовые сообщения!');
-        }
-      })
+      const proposedThemes = await ProposalModel.findAll({
+        limit: 10, // Если значение установленного лимита будет больше кол-ва записей, то просто выведутся все имеющиеся записи. (Т.е. это эквивалентно выведению всех записей)
+        order: [
+          ['createdAt', 'DESC'], // последние записи
+        ],
+        attributes: ['id', 'proposedTheme', 'fullName', 'userName', 'createdAt']
+      });
+
+      const str = JSON.stringify(proposedThemes, null, 2); // Значение из БД, преобразованное в строку, необработанное. (с Табулятивным отступом, кратным значению-параметру в конце)
+      const strModificationIteration1 = str.replace(/[{,"\[\]}]/gi, ''); // Первая итерация изменения строкового значения полученных данных.
+      const strModificationIteration2 = strModificationIteration1.replace(new RegExp("id", "g"), 'Id темы');
+      const strModificationIteration3 = strModificationIteration2.replace(new RegExp("proposedTheme", "g"), 'Название');
+      const strModificationIteration4 = strModificationIteration3.replace(new RegExp("fullName", "g"), 'Добавлено пользователем');
+      const strModificationIteration5 = strModificationIteration4.replace(new RegExp("userName: ", "g"), 'Контакт которого: @');
+      const strModificationIteration6 = strModificationIteration5.replace(new RegExp("createdAt", "g"), 'Дата добавления');
+
+      bot.sendMessage(chatId, strModificationIteration6);
+    }
+
+
+
+    // Внесение предложенной темы
+    if (typeof text === 'string') { // Если сообщение пользователя состоит из строки, то выполнить
+      // При внесении пользователем темы:
+      if (text.includes('Тема:')) {
+        // Метод includes() проверяет, содержит ли строка заданную подстроку, и возвращает, соответственно true или false. Является регистрозависимым.
+        await UsersModel.create({ chatId, userName, fullName, commandLog }); // Каждое действие пользователя логируется в базу данных.
+
+        ProposalModel.create({ proposedTheme: `${text}`, chatId: `${chatId}`, userName: `${userName}`, fullName: `${fullName}` });
+
+        /*         const lastTheme = await UsersModel.findOne({ // Найти последнего пользователя, ввёдшего команду, которая не равна перечисленным: '/add', '/help', '/start', '/info'
+                  commandLog,
+                  where: {
+                    [Op.not]: [
+                      { commandLog: ['/add', '/help', '/start', '/info'] },
+                    ]
+                  },
+                  order: [['createdAt', 'DESC']]
+                }) */
+
+        return bot.sendMessage(chatId, `Тема отправлена на предложение.\n \nСмотреть последнюю предложенную тем: /proposedThemeLast`); // Оповещение пользователя о добавлении темы (появлении в списке предложенных)
+      }
+    }
+    else {
+      bot.sendMessage(chatId, 'В чат можно отправлять только текстовые сообщения!');
     }
 
 
@@ -230,35 +193,55 @@ bot.on('message', async msg => {
 
 
 
+
+    // Вывод всех тем из подсистемы
     if (text === '/topicsList' || text === 'см темы') {
 
       await UsersModel.create({ chatId, userName, fullName, commandLog }); // Каждое действие пользователя логируется в базу данных.
 
       bot.sendMessage(chatId, `*На данный момент доступны следующие темы для просмотра:*`, { parse_mode: "Markdown" });
 
-      try {
-        for (let i = 1; i <= 99999999; i++) {
-          const theme = await DocThemesModel.findByPk(`${i}`)
-          if (theme.themeName === null || theme.themeName === undefined) {
-            bot.sendMessage(chatId, `Тема не дополнена: название отсутствует. Обратитесь к руководству проекта.`);
-          }
-          else if (theme.description === null || theme.description === undefined) {
-            bot.sendMessage(chatId, `\` \` \`${theme.id}\`\`\` *)  ${theme.themeName}* (нет описания)`, { parse_mode: "Markdown" });
-          } else {
-            bot.sendMessage(chatId, `\` \` \`${theme.id}\`\`\` *)  ${theme.themeName}* — ${theme.description}`, { parse_mode: "Markdown" });
-          }
+      for (let i = 1; i <= 99999999; i++) {
+        const theme = await DocThemesModel.findByPk(`${i}`)
+        if (theme.themeName === null || theme.themeName === undefined) {
+          bot.sendMessage(chatId, `Тема не дополнена: название отсутствует. Обратитесь к руководству проекта.`);
         }
-      }
-      catch (e) {
-        //  return bot.sendMessage(chatId, 'В таблице больше нет записей');
+        else if (theme.description === null || theme.description === undefined) {
+          bot.sendMessage(chatId, `\` \` \`${theme.id}\`\`\` *)  ${theme.themeName}* (нет описания)`, { parse_mode: "Markdown" });
+        } else {
+          bot.sendMessage(chatId, `\` \` \`${theme.id}\`\`\` *)  ${theme.themeName}* — ${theme.description}`, { parse_mode: "Markdown" });
+        }
       }
     }
 
-    // /topicsLast_25
+    // Вывод последних 25 тем из подсистемы
+    if (text === '/topicsLast_25' || text === '25 последних тем из подсистемы') {
+      await UsersModel.create({ chatId, userName, fullName, commandLog }); // Каждое действие пользователя логируется в базу данных.
+
+      bot.sendMessage(chatId, `*25 последних тем из подсистемы :*`, { parse_mode: "Markdown" });
+
+      const systemTheme = await DocThemesModel.findAll({
+        limit: 10, // Если значение установленного лимита будет больше кол-ва записей, то просто выведутся все имеющиеся записи. (Т.е. это эквивалентно выведению всех записей)
+        order: [
+          ['createdAt', 'DESC'], // последние записи
+        ],
+        attributes: ['id', 'themeName', 'description']
+      });
+
+      const str = JSON.stringify(systemTheme, null, 2); // Значение из БД, преобразованное в строку, необработанное. (с Табулятивным отступом, кратным значению-параметру в конце)
+      const strModificationIteration1 = str.replace(/[{,"\[\]}]/gi, ''); // Первая итерация изменения строкового значения полученных данных.
+      const strModificationIteration2 = strModificationIteration1.replace(new RegExp("id", "g"), 'Id темы');
+      const strModificationIteration3 = strModificationIteration2.replace(new RegExp("themeName", "g"), 'Название');
+      const strModificationIteration4 = strModificationIteration3.replace(new RegExp("description", "g"), 'Описание');
+
+      bot.sendMessage(chatId, strModificationIteration4);
+    }
 
 
 
 
+
+    // Вывод темы из подсистемы по номеру идентификатора в ней
     if (!isNaN(parseFloat(msg.text)) && isFinite(msg.text)) { // Если введённое сообщение является числом (причём конечным), то
       await UsersModel.create({ chatId, userName, fullName, commandLog }); // Каждое действие пользователя логируется в базу данных.
       // Попробовать найти в бд, в таблице doc_types запись с ключом, номер которого был введён пользователем
@@ -276,17 +259,17 @@ bot.on('message', async msg => {
         if (data.documentation === null || data.documentation === undefined) {
           bot.sendMessage(chatId, `\nДокументация отсутствует`);
         } else {
-          bot.sendMessage(chatId, `\n*Документация: ${data.documentation}*`, { parse_mode: "Markdown" });
+          bot.sendMessage(chatId, `\n*Документация:* ${data.documentation}`, { parse_mode: "Markdown" });
         }
         if (data.image === null || data.image === undefined) {
-          bot.sendMessage(chatId, `\Представление отсутствует`);
+          bot.sendMessage(chatId, `\nПредставление отсутствует`);
         } else {
-          bot.sendMessage(chatId, `\*Представление: ${data.image}*, { parse_mode: "Markdown" }`);
+          bot.sendMessage(chatId, `\n*Представление:* ${data.image}`, { parse_mode: "Markdown" });
         }
         if (data.ethalonFile === null || data.ethalonFile === undefined) {
-          bot.sendMessage(chatId, `\Эталонный файл отсутствует`);
+          bot.sendMessage(chatId, `\nЭталонный файл отсутствует`);
         } else {
-          bot.sendMessage(chatId, `\*Эталонный файл: ${data.ethalonFile}*, { parse_mode: "Markdown" }`);
+          bot.sendMessage(chatId, `\n*Эталонный файл:* ${data.ethalonFile}`, { parse_mode: "Markdown" });
         }
 
       }
@@ -294,6 +277,166 @@ bot.on('message', async msg => {
         return bot.sendMessage(chatId, 'Такой темы ещё нет, или она была удалена');
       }
     }
+
+
+
+    // Узнать кто администратор
+    if (text === '/admin' || text === 'admin' || text === 'админ') {
+      const roles = await RolesModel.findOne({
+        chatId,
+        where: { roleName: 'admin' }
+      })
+      if (chatId == roles.chatId) {
+        bot.sendMessage(chatId, `${roles.fullName}, Вы - действующий администратор.\n \nКоманды администратора:\n\n/get_admin — Попытаться стать администратором. \n\n/view_10_last_propose_or_view_members — Просмотр 10 последних предложивших или просмотревших из подсистемы темы пользователей. \n\n/view_20_last_logs — Вывод последних 20 записей о пользователях (их логов). \n\n/view_20_new_member — Вывод последних 20 тех, кто присоединился.`);
+      }
+      else {
+        bot.sendMessage(chatId, `Вы - не администратор. За всеми вопросами обращайтесь к текущему администратору ${roles.fullName} (@${roles.userName})`);
+      }
+    }
+
+    // Попробовать стать администратором
+    if (text === '/get_admin' || text === 'стать администратором') {
+
+      bot.sendMessage(chatId, 'Введите пароль администратора');
+      bot.on('message', async roles => {
+        const theme = roles.text;
+        await UsersModel.create({ chatId, userName, fullName, commandLog }); // При первом подключении к приложению информация о пользователе сразу сохранится в базу данных.
+        const userRoles = await RolesModel.findOne({
+          chatId,
+          where: { roleName: 'admin' }
+        });
+
+        if (theme === `${userRoles.rolePassword}`) {
+          RolesModel.update(
+            { chatId: `${chatId}`, userName: `${userName}`, fullName: `${fullName}` },
+            { where: { roleName: 'admin' } },
+          );
+
+          return bot.sendMessage(chatId, `${userRoles.fullName} (@${userRoles.userName}) - больше не администратор.`);
+        }
+      })
+    }
+
+
+    //////////////////////////////// команды администраторов ////////////////////////////////
+    // Где пользователь, обращающийся к приложению, имеет роль "администратор"
+    const roleAdmin = await RolesModel.findOne({
+      chatId,
+      where: { roleName: 'admin' }
+    })
+    // Если пользователь - администратор, то ему доступны следующие команды:
+    if (chatId == roleAdmin.chatId) {
+
+      // Просмотр 10 последних предложивших или просмотревших из подсистемы темы пользователей.
+      if (text === '/view_10_last_propose_or_view_members' || text === 'Просмотр 10 последних предложивших или просмотревших') {
+
+        // Найти последнего пользователя, ввёдшего команду, которая не равна перечисленным: '/add', '/help', '/start', '/info', '/view_20_last_logs', '/view_20_new_member', '/proposedThemeLast', '/proposedThemesLast_10', '/topicsList', '/topicsLast_25', '/admin', '/get_admin', '/view_10_last_propose_or_view_members'
+        const userLogs = await UsersModel.findAndCountAll({
+          commandLog,
+          limit: 10,
+          where: {
+            [Op.not]: [
+              { commandLog: ['/add', '/help', '/start', '/info', '/view_20_last_logs', '/view_20_new_member', '/proposedThemeLast', '/proposedThemesLast_10', '/topicsList', '/topicsLast_25', '/admin', '/get_admin', '/view_10_last_propose_or_view_members'] },
+            ]
+          }, // условие, что пользователь ввёл "/start" - присоединился
+          order: [
+            ['id', 'DESC'], // последние записи
+          ],
+          attributes: ['id', 'chatId', 'userName', 'fullName', 'commandLog', 'createdAt']
+        });
+
+        const roles = await RolesModel.findOne({ chatId });
+        const adminChatId = roles.chatId;
+        const str = JSON.stringify(userLogs, null, 1); // Значение из БД, преобразованное в строку, необработанное. (с Табулятивным отступом, кратным значению-параметру в конце)
+        const strModificationIteration1 = str.replace(/[{,"\[\]}]/gi, ''); // Первая итерация изменения строкового значения полученных данных.
+        const strModificationIteration2 = strModificationIteration1.replace('count', 'Всего предложили тем:');
+        const strModificationIteration3 = strModificationIteration2.replace('rows', 'Записи о пользователях');
+        const strModificationIteration4 = strModificationIteration3.replace(new RegExp("id", "g"), 'ID в нашей системе');
+        const strModificationIteration5 = strModificationIteration4.replace(new RegExp("chatId", "g"), 'ID в Telegram');
+        const strModificationIteration6 = strModificationIteration5.replace(new RegExp("userName: ", "g"), 'Имя-контакт в Tg: @');
+        const strModificationIteration7 = strModificationIteration6.replace(new RegExp("fullName", "g"), 'ФИО');
+        const strModificationIteration8 = strModificationIteration7.replace(new RegExp("commandLog", "g"), 'Ввод команды');
+        const strModificationIteration9 = strModificationIteration8.replace(new RegExp("createdAt", "g"), 'Дата ввода');
+
+        bot.sendMessage(adminChatId, strModificationIteration9);
+      }
+
+      // Вывод последних 20 записей о пользователях (их логов)
+      if (text === '/view_20_last_logs' || text === 'Вывод последних 20 записей о пользователях (их логов)') {
+
+        const userLogs = await UsersModel.findAndCountAll({
+          limit: 20,  // 20 записей
+          order: [
+            ['id', 'DESC'], // последние записи
+          ],
+          attributes: ['id', 'chatId', 'userName', 'fullName', 'commandLog', 'createdAt']
+        });
+
+        const roles = await RolesModel.findOne({ chatId });
+        const adminChatId = roles.chatId;
+        const str = JSON.stringify(userLogs, null, 1); // Значение из БД, преобразованное в строку, необработанное. (с Табулятивным отступом, кратным значению-параметру в конце)
+        const strModificationIteration1 = str.replace(/[{,"\[\]}]/gi, ''); // Первая итерация изменения строкового значения полученных данных.
+        const strModificationIteration2 = strModificationIteration1.replace('count', 'Всего записей-логов');
+        const strModificationIteration3 = strModificationIteration2.replace('rows', 'Записи о пользователях');
+        const strModificationIteration4 = strModificationIteration3.replace(new RegExp("id", "g"), 'ID в нашей системе');
+        const strModificationIteration5 = strModificationIteration4.replace(new RegExp("chatId", "g"), 'ID в Telegram');
+        const strModificationIteration6 = strModificationIteration5.replace(new RegExp("userName: ", "g"), 'Имя-контакт в Tg: @');
+        const strModificationIteration7 = strModificationIteration6.replace(new RegExp("fullName", "g"), 'ФИО');
+        const strModificationIteration8 = strModificationIteration7.replace(new RegExp("commandLog", "g"), 'Ввод команды');
+        const strModificationIteration9 = strModificationIteration8.replace(new RegExp("createdAt", "g"), 'Дата ввода');
+
+        bot.sendMessage(adminChatId, strModificationIteration9);
+      }
+
+      // Вывод последних 20 тех, кто ввёл команду /start, т.е. присоединился
+      if (text === '/view_20_new_member' || text === 'Вывод последних 20 тех, кто присоединился') {
+
+        const userLogs = await UsersModel.findAndCountAll({
+          limit: 20,  // 20 записей
+          where: { commandLog: '/start' }, // условие, что пользователь ввёл "/start" - присоединился
+          order: [
+            ['id', 'DESC'], // последние записи
+          ],
+          attributes: ['id', 'chatId', 'fullName', 'userName', 'createdAt'] // список атрибутов, которые будут выведены при запросе
+        });
+
+        const roles = await RolesModel.findOne({ chatId });
+        const adminChatId = roles.chatId;
+        const str = JSON.stringify(userLogs, null, 1); // Значение из БД, преобразованное в строку, необработанное. (с Табулятивным отступом, кратным значению-параметру в конце)
+        const strModificationIteration1 = str.replace(/[{,"\[\]}]/gi, ''); // Первая итерация изменения строкового значения полученных данных.
+        const strModificationIteration2 = strModificationIteration1.replace('count', 'Всего присоединившихся пользователей:');
+        const strModificationIteration3 = strModificationIteration2.replace('rows', 'Записи о последних 20 из них');
+        const strModificationIteration4 = strModificationIteration3.replace(new RegExp("id", "g"), 'ID в нашей системе');
+        const strModificationIteration5 = strModificationIteration4.replace(new RegExp("chatId", "g"), 'ID в Telegram');
+        const strModificationIteration6 = strModificationIteration5.replace(new RegExp("fullName", "g"), 'ФИО');
+        const strModificationIteration7 = strModificationIteration6.replace(new RegExp("userName: ", "g"), 'Имя-контакт в Tg: @');
+        const strModificationIteration8 = strModificationIteration7.replace(new RegExp("createdAt", "g"), 'Дата присоединения');
+
+        bot.sendMessage(adminChatId, strModificationIteration8);
+      }
+
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -318,132 +461,3 @@ bot.on('message', async msg => {
 
 })
 
-
-// Данные команды также явно доступны только администратору.
-bot.on('message', async msg => {
-  console.log(msg)
-
-  const text = msg.text;
-  const commandLog = text;
-  const chatId = msg.chat.id;
-  const userName = `${msg.from.username}`;
-  const fullName = `${msg.from.first_name} ${msg.from.last_name}`;
-
-  try {
-    await sequelize.authenticate();
-    await sequelize.sync();
-
-
-    /* 
-        // Данная команда вводится администратором после перезапуска приложения, тем самым, открывая поток сообщений для добавления тем по ключевому слову.
-        if (text === '/add' || text === 'предложить') {
-
-     */
-
-
-
-
-
-
-    if (text === '/админ' || text === 'админ' || text === '/admin' || text === 'admin') {
-      const roles = await RolesModel.findOne({ chatId })
-      if (chatId == roles.chatId || text === 'стать администратором') {
-        bot.sendMessage(chatId, 'Команды администратора:\n/get_admin — Становления администратором. \n/view_member — Просмотр действий пользователей.');
-      }
-      else {
-        bot.sendMessage(chatId, `Вы - не администратор. За всеми вопросами обращайтесь к текущему администратору ${roles.fullName} (@${roles.userName})`);
-      }
-    }
-
-    if (text === '/get_admin' || text === 'стать администратором') {
-      try {
-
-        bot.sendMessage(chatId, 'Введите пароль администратора');
-        bot.on('message', async roles => {
-          const theme = roles.text;
-          await UsersModel.create({ chatId, userName, fullName, commandLog }); // При первом подключении к приложению информация о пользователе сразу сохранится в базу данных.
-          //      const pass = `${RolesModel.rolePassword}`
-          if (theme.includes('pass')) {
-            //  await RolesModel.create({ chatId, userName, fullName }); // При первом подключении к приложению информация о пользователе сразу сохранится в базу данных.
-            RolesModel.update(
-              { chatId: `${chatId}`, userName: `${userName}`, fullName: `${fullName}` },
-              { where: { roleName: 'admin' } },
-            );
-            /*                        
-            UPDATE roles        
-               SET chatId = 'chatId', chatId = 'userName', chatId = 'fullName'
-             WHERE roleName = 'admin';
-             */
-            const roles = await RolesModel.findOne({ chatId });
-
-            return bot.sendMessage(chatId, `${roles.fullName} (@${roles.userName}) - больше не администратор.`);
-          }
-        })
-      }
-      catch (e) {
-        return bot.sendMessage(chatId, 'Произошла ошибка - проверьте соединение с базой данных или Интернетом');
-      }
-    }
-
-    // /set_password
-
-
-
-
-
-
-    // добавить /view_last_25_logs (последние 25 записей)
-    // добавить /view_20_new_member (последние 20 тех, кто ввёл команду /start, т.е. присоединился)
-    // изменить на вытягивание всех записей
-
-    if (text === '/view_member' || text === 'разлогировать пользователей') {
-      try {
-        /*      
-        sModel.findAll() будет равняться sql-запросу:
-        SELECT "id", "chatId", "userName", "fullName", "commandLog", "createdAt" FROM "users" AS "users";
-        */
-
-        /* Model.findAndCountAll() будет равняться sql-запросу: 
-        SELECT count(*) AS "count" FROM "users" AS "users";
-        SELECT "id", "chatId", "userName", "fullName", "commandLog", "createdAt" FROM "users" AS "users" ORDER BY "users"."id" DESC LIMIT 2;
-        */
-
-        const userLogs = await UsersModel.findAndCountAll({
-          limit: 3,  // две записи
-          //  where: { commandLog: '/start' }, // условие, если надо
-          order: [
-            ['id', 'DESC'], // последние записи
-          ],
-          attributes: ['id', 'chatId', 'userName', 'fullName', 'commandLog', 'createdAt']
-        });
-        //console.log("All users:", JSON.stringify(userLogs, null, 2));
-
-        const roles = await RolesModel.findOne({ chatId });
-        const adminChatId = roles.chatId;
-        //    bot.sendMessage(adminChatId, `${JSON.stringify(userLogs, null, 2)}`);
-        const str = JSON.stringify(userLogs, null, 1); // Значение из БД, преобразованное в строку, необработанное. (с Табулятивным отступом, кратным значению-параметру в конце)
-        const strModificationIteration1 = str.replace(/[{,"\[\]}]/gi, ''); // Первая итерация изменения строкового значения полученных данных.
-        const strModificationIteration2 = strModificationIteration1.replace('count', 'Всего записей-логов');
-        const strModificationIteration3 = strModificationIteration2.replace('rows', 'Записи о пользователях');
-        const strModificationIteration4 = strModificationIteration3.replace(new RegExp("id", "g"), 'ID в нашей системе');
-        const strModificationIteration5 = strModificationIteration4.replace(new RegExp("chatId", "g"), 'ID в Telegram');
-        const strModificationIteration6 = strModificationIteration5.replace(new RegExp("userName: ", "g"), 'Имя-контакт в Tg: @');
-        const strModificationIteration7 = strModificationIteration6.replace(new RegExp("fullName", "g"), 'ФИО');
-        const strModificationIteration8 = strModificationIteration7.replace(new RegExp("commandLog", "g"), 'Ввод команды');
-        const strModificationIteration9 = strModificationIteration8.replace(new RegExp("createdAt", "g"), 'Дата ввода');
-
-
-
-        //  bot.sendMessage(adminChatId, `${JSON.stringify(userLogs, null, 2)}`);
-
-        bot.sendMessage(adminChatId, strModificationIteration9);
-
-      }
-      catch (e) {
-        return bot.sendMessage(adminChatId, 'Произошла ошибка - проверьте соединение с базой данных или Интернетом');
-      }
-    }
-  } catch (e) {
-  }
-
-})
