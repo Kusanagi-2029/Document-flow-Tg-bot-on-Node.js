@@ -341,19 +341,6 @@ bot.on('message', async msg => {
         bot.sendMessage(adminChatId, strModificationIteration8);
       }
     }
-    //////////////////////////////////////////////////////////////// ВРЕМЕННО ////////////////////////////////////////////////////////////////
-
-    if (text === '[' || text === ']' || text === 'х' || text === 'ъ') {
-      bot.sendMessage(chatId, 'Таблицы удалены',
-        sequelize
-          .sync() // create the database table for our model(s)
-          .then(function () {
-            return sequelize.drop(); // drop all tables in the db
-          })
-      )
-    }
-
-    //////////////////////////////////////////////////////////////// ВРЕМЕННО ////////////////////////////////////////////////////////////////
   } catch (e) {
     // Если введена незнакомая приложению команда (не из массива обозначенных комманд)
     // return bot.sendMessage(chatId, 'Команда некорректна, введите команду заново. ');
