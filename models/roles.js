@@ -3,7 +3,7 @@ const { DataTypes } = require('sequelize'); // необходим для ука�
 
 const RolesModel = sequelize.define('roles', {
     roleName: { type: DataTypes.STRING(512), comment: 'Название роли' },
-    roleDescription: { type: DataTypes.STRING(5120), comment: 'Описание роли' },
+    roleDescription: { type: DataTypes.STRING(1024), comment: 'Описание роли' },
     rolePassword: { type: DataTypes.STRING(512), comment: 'Пароль для получения роли' },
     chatId: { type: DataTypes.STRING, unique: false, comment: 'Идентификатор пользователя в чате относительно инфраструктуры Telegram' },
     userName: { type: DataTypes.STRING, unique: false, comment: 'Имя пользователя в инфраструктуре Telegram, который стал администратором чата в Tg' },
