@@ -15,7 +15,7 @@ const ProposalModel = require('./models/proposal'); // импорт модели
 const DocThemesModel = require('./models/doc_themes'); // импорт модели тем документации
 const RolesModel = require('./models/roles'); // импорт модели с ролями
 
-const token = '5230486458:AAEuqT2ONIpA6blhjqN8BiNA4HXwjr80qFw'; // Токен созданного бота.
+const token = 'Your bot token'; // Токен созданного бота.
 
 /* новый TelegramBot(токен, [параметры]) - метод запроса для получения сообщений: 
 - Чтобы использовать стандартный опрос, нужно установить для параметров polling:true. 
