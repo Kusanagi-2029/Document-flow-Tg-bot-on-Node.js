@@ -17,10 +17,10 @@ const {Sequelize} = require('sequelize');
 /* module.exports = new Sequelize(
     'webAppWithTelegram_db',
     'root',
-    'rootpass',
+    'rootpassword',
     {
-        host:'82.202.199.139',
-        port:'6432',
+        host:'ip',
+        port:'port',
         dialect:'postgres'
     }
 ) 
@@ -28,11 +28,11 @@ const {Sequelize} = require('sequelize');
 
 module.exports = new Sequelize(
     'webAppWithTelegram_db',
-    'postgres',
-    'rootpass',
+    'root',
+    'rootpassword',
     {
-        host:'localhost',
-        port:'5432',
+        host:'ip',
+        port:'port',
         dialect:'postgres'
     }
 )
