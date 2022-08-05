@@ -14,6 +14,7 @@ const {Sequelize} = require('sequelize');
     4.3. dialect (указать, с какой именно БД должна работать ORM)
 */
 
+// This db is for deploy 
 /* module.exports = new Sequelize(
     'webAppWithTelegram_db',
     'root',
@@ -26,6 +27,7 @@ const {Sequelize} = require('sequelize');
 ) 
 */
 
+// This is local db ))
 module.exports = new Sequelize(
     'webAppWithTelegram_db',
     'root',
