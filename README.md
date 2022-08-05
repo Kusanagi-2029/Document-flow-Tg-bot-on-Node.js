@@ -32,7 +32,7 @@
 * файла, являющимся точкой входа в программу – index.js;
 * файлов указанных зависимостей – package-lock.json, package.json.
 
-![Структура проекта](https://user-images.githubusercontent.com/71845085/183039551-9f2829cf-802e-4679-9110-75710771c54f.png)
+![Структура проекта](https://user-images.githubusercontent.com/71845085/183080530-f82a8ec0-58b7-4195-9967-67385fa7071f.png)
 
 <a name="architecture"><h2>Архитектура приложения</h2></a>
 ![Архитектура приложения](https://user-images.githubusercontent.com/71845085/183041335-34d0e07a-75bb-4c71-84d8-8e514d9f623b.png)
