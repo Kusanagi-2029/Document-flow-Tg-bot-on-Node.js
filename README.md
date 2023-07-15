@@ -1,4 +1,4 @@
-# Document-flow-Tg-bot-on-Node.js - Приложение по документообороту
+# Document flow Tg-bot on Node.js - Приложение по документообороту
 
 ##### Содержание  
 * [Назначение Telegram-бота](#appointment)  
